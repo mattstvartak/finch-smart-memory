@@ -77,10 +77,6 @@ export interface SearchResult {
 export interface SmartMemoryConfig {
   /** Root data directory (default: ~/.openclaw/smart-memory) */
   dataDir: string;
-  /** Cheap model for extraction/classification (default: google/gemini-2.5-flash-lite-preview) */
-  cheapModel: string;
-  /** Embedding model (default: google/text-embedding-004 via OpenRouter) */
-  embeddingModel: string;
   /** Days before daily tier moves to short-term (default: 2) */
   dailyRetentionDays: number;
   /** Days before short-term promotes to long-term if recalled (default: 14) */
@@ -103,8 +99,6 @@ export interface SmartMemoryConfig {
 
 export const DEFAULT_CONFIG: SmartMemoryConfig = {
   dataDir: '',
-  cheapModel: 'google/gemini-2.5-flash-lite-preview',
-  embeddingModel: 'google/text-embedding-004',
   dailyRetentionDays: 2,
   shortTermRetentionDays: 14,
   longTermRetentionDays: 90,

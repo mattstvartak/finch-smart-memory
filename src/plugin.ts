@@ -62,16 +62,14 @@ const plugin = {
     const pluginConfig = api.pluginConfig ?? {};
     const config = loadConfig({
       extractionProvider: pluginConfig.extractionProvider,
-      cheapModel: pluginConfig.cheapModel,
-      embeddingModel: pluginConfig.embeddingModel,
       mem0UserId: pluginConfig.mem0UserId,
       maxRecallChunks: pluginConfig.maxRecallChunks,
       maxRecallTokens: pluginConfig.maxRecallTokens,
     });
 
     // ── Wire LLM through OpenClaw's runtime ──────────────────────
-    // Routes all LLM and embedding calls through the user's existing
-    // model provider. No separate API key needed.
+    // Routes all LLM calls through the user's default model provider.
+    // No model overrides, no direct API calls, no extra keys.
     setLlmProvider({
       async complete(systemPrompt: string, userMessage: string, opts?: { maxTokens?: number; temperature?: number }): Promise<string> {
         const result = await api.runtime.subagent.run({
@@ -79,32 +77,13 @@ const plugin = {
           systemPrompt,
           maxTokens: opts?.maxTokens ?? 1000,
           temperature: opts?.temperature ?? 0,
-          model: config.cheapModel || undefined,
         });
         return result?.text ?? result?.content ?? '';
       },
-      async embed(text: string): Promise<number[]> {
-        // Use modelAuth to resolve the user's API key for embedding calls
-        const key = await api.runtime.modelAuth?.resolveApiKey?.(config.embeddingModel);
-        if (!key) throw new Error('No embedding provider available. Configure a model provider in OpenClaw.');
-
-        // Determine the base URL from the model prefix
-        const provider = config.embeddingModel.split('/')[0] ?? 'openrouter';
-        const baseUrls: Record<string, string> = {
-          openrouter: 'https://openrouter.ai/api/v1',
-          openai: 'https://api.openai.com/v1',
-          google: 'https://generativelanguage.googleapis.com/v1beta',
-        };
-        const baseUrl = baseUrls[provider] ?? 'https://openrouter.ai/api/v1';
-
-        const res = await fetch(`${baseUrl}/embeddings`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
-          body: JSON.stringify({ model: config.embeddingModel, input: text }),
-        });
-        if (!res.ok) throw new Error(`Embedding error ${res.status}: ${await res.text()}`);
-        const data = await res.json() as any;
-        return data.data?.[0]?.embedding ?? [];
+      async embed(_text: string): Promise<number[]> {
+        // Embeddings not available through the runtime — search falls
+        // back to keyword-only mode which works well for most use cases.
+        return [];
       },
     });
 
