@@ -351,24 +351,21 @@ const plugin = {
     }
 
     // ── Memory Prompt Section ────────────────────────────────────
-    // Inject recalled memories into the system prompt automatically.
+    // Provide guidance to the agent on how to use the memory tools.
+    // Must be synchronous and return string[].
 
-    api.registerMemoryPromptSection?.(async (ctx: any) => {
-      try {
-        const storage = await ensureStorage(config);
-        const query = ctx.lastUserMessage ?? ctx.topic ?? '';
-        if (!query) return '';
+    api.registerMemoryPromptSection?.(({ availableTools }: { availableTools: Set<string> }) => {
+      const hasSearch = availableTools.has('memory_search');
+      const hasIngest = availableTools.has('memory_ingest');
+      const hasFormat = availableTools.has('memory_format');
+      if (!hasSearch && !hasIngest && !hasFormat) return [];
 
-        const results = await search(config, storage, query);
-        if (results.length === 0) return '';
-
-        const selected = await selectRelevant(config, query, results);
-        const text = formatRecalledMemories(selected);
-        const rules = await formatRulesForPrompt(storage);
-        return text + rules;
-      } catch {
-        return '';
-      }
+      const lines = [
+        '## Smart Memory',
+        'Before answering anything about prior work, decisions, dates, people, preferences, or todos: run memory_search to find relevant memories. Use memory_ingest to immediately save important facts, preferences, decisions, or corrections the user shares — write before responding (WAL principle). Use memory_format to get a structured recall block for the current topic.',
+        '',
+      ];
+      return lines;
     });
 
     api.logger?.info('Smart Memory plugin registered');
