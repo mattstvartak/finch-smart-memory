@@ -3,6 +3,44 @@
   "name": "Smart Memory",
   "description": "Intelligent memory manager with LLM-powered extraction, hybrid ANN vector search, tier lifecycle, spreading activation, procedural rules, WAL capture, Mem0 cloud integration, and session-state hot RAM.",
   "kind": "memory",
+  "providerAuthEnvVars": {
+    "finch-smart-memory": ["OPENROUTER_API_KEY", "MEM0_API_KEY"]
+  },
+  "providerAuthChoices": [
+    {
+      "provider": "finch-smart-memory",
+      "method": "api-key",
+      "choiceId": "openrouter-key",
+      "choiceLabel": "OpenRouter API Key (required for local extraction/search)",
+      "cliOption": "--openrouter-api-key <key>",
+      "groupId": "finch-smart-memory",
+      "groupLabel": "Finch Smart Memory",
+      "groupHint": "API keys for memory extraction and search"
+    },
+    {
+      "provider": "finch-smart-memory",
+      "method": "api-key",
+      "choiceId": "mem0-key",
+      "choiceLabel": "Mem0 API Key (optional, for cloud extraction)",
+      "cliOption": "--mem0-api-key <key>",
+      "groupId": "finch-smart-memory",
+      "groupLabel": "Finch Smart Memory"
+    }
+  ],
+  "contracts": {
+    "tools": [
+      "memory_search",
+      "memory_format",
+      "memory_ingest",
+      "memory_extract",
+      "memory_maintain",
+      "memory_rules",
+      "memory_outcome",
+      "memory_session",
+      "memory_stats",
+      "memory_mem0_sync"
+    ]
+  },
   "configSchema": {
     "type": "object",
     "additionalProperties": false,

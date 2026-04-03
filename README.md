@@ -215,6 +215,38 @@ All data lives in `~/.openclaw/smart-memory/`:
     └── rules.lance/     # Procedural rules
 ```
 
+## Security
+
+### Network calls
+This plugin makes outbound requests to exactly two services:
+- **OpenRouter** (`https://openrouter.ai/api/v1/`) — LLM completions and embeddings
+- **Mem0** (via `mem0ai` npm package) — only when `extractionProvider` is `mem0` or `both`
+
+No other endpoints are contacted. No telemetry or analytics.
+
+### API keys
+- `OPENROUTER_API_KEY` — **required** for local extraction and search
+- `MEM0_API_KEY` — **optional**, only needed if using Mem0 cloud extraction
+- Keys are read from environment variables only; never written to disk by the plugin
+
+### Prompt injection
+When `autoExtract` and `autoMaintain` are enabled (the defaults), the plugin automatically:
+1. Runs memory consolidation at session start
+2. Injects recalled memories into the system prompt based on the user's message
+
+To disable automatic behavior and control manually:
+```json
+{
+  "config": {
+    "autoExtract": false,
+    "autoMaintain": false
+  }
+}
+```
+
+### Local storage
+Memories, embeddings, and procedural rules are stored locally in `~/.openclaw/smart-memory/lance/`. Override with `SMART_MEMORY_DIR` to place data elsewhere. No memory content is sent anywhere except to the configured LLM (OpenRouter) and optionally Mem0.
+
 ## License
 
 MIT
