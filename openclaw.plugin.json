@@ -1,5 +1,5 @@
 {
-  "id": "finch-memory",
+  "id": "finch-smart-memory",
   "name": "Smart Memory",
   "description": "Intelligent memory manager with LLM-powered extraction, hybrid ANN vector search, tier lifecycle, spreading activation, procedural rules, WAL capture, Mem0 cloud integration, and session-state hot RAM.",
   "kind": "memory",
