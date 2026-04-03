@@ -1,5 +1,5 @@
 {
-  "name": "finch-smart-memory",
+  "name": "@onenomad/finch-smart-memory",
   "version": "1.0.0",
   "description": "Smart memory plugin for OpenClaw — LLM-powered extraction, hybrid ANN search, tier lifecycle, spreading activation, procedural rules, WAL, Mem0, and session-state hot RAM.",
   "type": "module",
@@ -8,7 +8,15 @@
     "smart-memory": "dist/cli.js"
   },
   "openclaw": {
-    "extensions": ["./dist/plugin.js"]
+    "extensions": ["./dist/plugin.js"],
+    "compat": {
+      "pluginApi": ">=2026.3.0",
+      "gatewayApi": ">=2026.3.0"
+    },
+    "build": {
+      "openclawVersion": "2026.3.24",
+      "sdkVersion": "2026.3.24"
+    }
   },
   "scripts": {
     "build": "tsc",
