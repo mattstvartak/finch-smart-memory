@@ -54,13 +54,11 @@ export async function ingest(
       recallOutcomes: [],
     };
 
-    // Generate embedding if API key available
-    if (config.openRouterApiKey) {
-      try {
-        chunk.embedding = await embed(config, chunk.content);
-      } catch {
-        // Embeddings are optional for WAL — speed matters more
-      }
+    // Generate embedding (best-effort — speed matters more for WAL)
+    try {
+      chunk.embedding = await embed(config, chunk.content);
+    } catch {
+      // Embeddings are optional for WAL
     }
 
     await storage.saveChunk(chunk);

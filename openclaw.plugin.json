@@ -4,27 +4,18 @@
   "description": "Intelligent memory manager with LLM-powered extraction, hybrid ANN vector search, tier lifecycle, spreading activation, procedural rules, WAL capture, Mem0 cloud integration, and session-state hot RAM.",
   "kind": "memory",
   "providerAuthEnvVars": {
-    "finch-smart-memory": ["OPENROUTER_API_KEY", "MEM0_API_KEY"]
+    "finch-smart-memory": ["MEM0_API_KEY"]
   },
   "providerAuthChoices": [
     {
       "provider": "finch-smart-memory",
       "method": "api-key",
-      "choiceId": "openrouter-key",
-      "choiceLabel": "OpenRouter API Key (required for local extraction/search)",
-      "cliOption": "--openrouter-api-key <key>",
-      "groupId": "finch-smart-memory",
-      "groupLabel": "Finch Smart Memory",
-      "groupHint": "API keys for memory extraction and search"
-    },
-    {
-      "provider": "finch-smart-memory",
-      "method": "api-key",
       "choiceId": "mem0-key",
-      "choiceLabel": "Mem0 API Key (optional, for cloud extraction)",
+      "choiceLabel": "Mem0 API Key (optional, only for Mem0 cloud extraction)",
       "cliOption": "--mem0-api-key <key>",
       "groupId": "finch-smart-memory",
-      "groupLabel": "Finch Smart Memory"
+      "groupLabel": "Finch Smart Memory",
+      "groupHint": "No API key required for local extraction — uses your existing OpenClaw model provider"
     }
   ],
   "contracts": {

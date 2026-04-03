@@ -3,6 +3,7 @@ import { homedir } from 'node:os';
 import { join } from 'node:path';
 import { Storage } from './storage.js';
 import { loadConfig } from './config.js';
+import { setLlmProvider } from './llm.js';
 import { extractFromConversation } from './extractor.js';
 import { search, selectRelevant, formatRecalledMemories } from './search.js';
 import { consolidate } from './consolidator.js';
@@ -66,6 +67,45 @@ const plugin = {
       mem0UserId: pluginConfig.mem0UserId,
       maxRecallChunks: pluginConfig.maxRecallChunks,
       maxRecallTokens: pluginConfig.maxRecallTokens,
+    });
+
+    // ── Wire LLM through OpenClaw's runtime ──────────────────────
+    // Routes all LLM and embedding calls through the user's existing
+    // model provider. No separate API key needed.
+    setLlmProvider({
+      async complete(systemPrompt: string, userMessage: string, opts?: { maxTokens?: number; temperature?: number }): Promise<string> {
+        const result = await api.runtime.subagent.run({
+          prompt: userMessage,
+          systemPrompt,
+          maxTokens: opts?.maxTokens ?? 1000,
+          temperature: opts?.temperature ?? 0,
+          model: config.cheapModel || undefined,
+        });
+        return result?.text ?? result?.content ?? '';
+      },
+      async embed(text: string): Promise<number[]> {
+        // Use modelAuth to resolve the user's API key for embedding calls
+        const key = await api.runtime.modelAuth?.resolveApiKey?.(config.embeddingModel);
+        if (!key) throw new Error('No embedding provider available. Configure a model provider in OpenClaw.');
+
+        // Determine the base URL from the model prefix
+        const provider = config.embeddingModel.split('/')[0] ?? 'openrouter';
+        const baseUrls: Record<string, string> = {
+          openrouter: 'https://openrouter.ai/api/v1',
+          openai: 'https://api.openai.com/v1',
+          google: 'https://generativelanguage.googleapis.com/v1beta',
+        };
+        const baseUrl = baseUrls[provider] ?? 'https://openrouter.ai/api/v1';
+
+        const res = await fetch(`${baseUrl}/embeddings`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+          body: JSON.stringify({ model: config.embeddingModel, input: text }),
+        });
+        if (!res.ok) throw new Error(`Embedding error ${res.status}: ${await res.text()}`);
+        const data = await res.json() as any;
+        return data.data?.[0]?.embedding ?? [];
+      },
     });
 
     // ── memory_search ────────────────────────────────────────────

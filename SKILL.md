@@ -2,7 +2,7 @@
 name: smart-memory
 description: Intelligent memory manager with LLM-powered extraction, hybrid ANN vector+keyword search, tier lifecycle, spreading activation, procedural rules, WAL capture, and session-state hot RAM. Use when the user asks about memory, preferences, or past conversations.
 homepage: https://github.com/mattstvartak/finch-smart-memory
-metadata: {"openclaw":{"emoji":"🧠","requires":{"bins":["node"],"env":["OPENROUTER_API_KEY"]},"primaryEnv":"OPENROUTER_API_KEY"},"author":"OneNomad LLC","version":"1.0.0","categories":["memory","intelligence","personalization"]}
+metadata: {"openclaw":{"emoji":"🧠","requires":{"bins":["node"]}},"author":"OneNomad LLC","version":"1.0.2","categories":["memory","intelligence","personalization"]}
 ---
 
 # Smart Memory Manager
@@ -155,33 +155,9 @@ The SESSION-STATE.md file is plain markdown — inject it into your system promp
 
 ## Configuration
 
-### API Keys (environment variables only — never stored on disk)
-- `OPENROUTER_API_KEY` — Required for local extraction and search
-- `MEM0_API_KEY` — Required for Mem0 operations
+Configure in `openclaw.json` under `plugins.entries.finch-smart-memory.config`. No API keys required — the plugin uses your existing OpenClaw model provider.
 
-### Settings
-Configure via CLI or edit `~/.openclaw/smart-memory/config.json` directly:
-```bash
-node dist/cli.js config set extractionProvider both
-node dist/cli.js config set cheapModel google/gemini-2.5-flash-lite-preview
-node dist/cli.js config check   # Show resolved config
-```
-
-Available settings:
-| Key | Default | Description |
-|-----|---------|-------------|
-| `extractionProvider` | `local` | `local`, `mem0`, or `both` |
-| `cheapModel` | `google/gemini-2.5-flash-lite-preview` | LLM for extraction |
-| `embeddingModel` | `google/text-embedding-004` | Embedding model |
-| `mem0UserId` | `default` | Mem0 user scope |
-| `maxRecallChunks` | `10` | Max memories per search |
-| `maxRecallTokens` | `1500` | Token budget for recalled memories |
-
-### Environment variable overrides
-- `MEM0_USER_ID` — Mem0 user scope
-- `SMART_MEMORY_DIR` — Override data directory
-- `SMART_MEMORY_CHEAP_MODEL` — Override extraction model
-- `SMART_MEMORY_EXTRACTION_PROVIDER` — Override extraction provider
+Optional: set `MEM0_API_KEY` environment variable if using Mem0 cloud extraction.
 
 ## Integration with OpenClaw
 

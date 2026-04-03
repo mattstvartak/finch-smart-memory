@@ -77,8 +77,6 @@ export interface SearchResult {
 export interface SmartMemoryConfig {
   /** Root data directory (default: ~/.openclaw/smart-memory) */
   dataDir: string;
-  /** OpenRouter API key */
-  openRouterApiKey: string;
   /** Cheap model for extraction/classification (default: google/gemini-2.5-flash-lite-preview) */
   cheapModel: string;
   /** Embedding model (default: google/text-embedding-004 via OpenRouter) */
@@ -99,13 +97,12 @@ export interface SmartMemoryConfig {
   mem0ApiKey: string;
   /** Mem0 user ID for scoping memories (default: 'default') */
   mem0UserId: string;
-  /** Extraction provider: 'local' (OpenRouter LLM) or 'mem0' or 'both' (default: 'local') */
+  /** Extraction provider: 'local' (OpenClaw runtime) or 'mem0' or 'both' (default: 'local') */
   extractionProvider: 'local' | 'mem0' | 'both';
 }
 
 export const DEFAULT_CONFIG: SmartMemoryConfig = {
   dataDir: '',
-  openRouterApiKey: '',
   cheapModel: 'google/gemini-2.5-flash-lite-preview',
   embeddingModel: 'google/text-embedding-004',
   dailyRetentionDays: 2,

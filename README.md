@@ -1,12 +1,12 @@
-# Smart Memory Plugin for OpenClaw
+# Finch Smart Memory — OpenClaw Plugin
 
-An intelligent memory plugin for [OpenClaw](https://openclaw.ai) that replaces manual memory curation with automatic extraction, hybrid search, and cognitive-science-inspired memory lifecycle management.
+An intelligent memory plugin for [OpenClaw](https://openclaw.ai) that replaces manual memory curation with automatic extraction, hybrid search, and cognitive-science-inspired memory lifecycle management. Uses your existing OpenClaw model provider — no extra API keys required.
 
 Built by **OneNomad LLC**.
 
 ## Features
 
-- **LLM-powered extraction** — automatically pulls facts, preferences, decisions, and corrections from conversations
+- **LLM-powered extraction** — automatically pulls facts, preferences, decisions, and corrections from conversations using your configured model
 - **Hybrid search** — combines LanceDB native ANN vector search with keyword matching, recency/frequency bonuses, and graph-based spreading activation
 - **Tier lifecycle** — memories flow through daily, short-term, long-term, and archive tiers with automatic promotion and decay
 - **Procedural rules** — learns behavioral rules from user corrections ("always do X", "never do Y") with confidence tracking
@@ -14,93 +14,75 @@ Built by **OneNomad LLC**.
 - **Session state** — hot RAM scratchpad that survives compaction and restarts
 - **Mem0 cloud** — optional managed extraction via [Mem0](https://mem0.ai) with auto-deduplication
 - **Recall outcomes** — feedback loop that strengthens helpful memories and demotes irrelevant ones
-- **Reconsolidation** — re-encodes memories through current context when recalled as helpful
 - **Auto-consolidation** — runs maintenance automatically at session start
 - **Prompt injection** — automatically injects relevant memories into the system prompt
-
-## Requirements
-
-- Node.js 18+
-- An [OpenRouter](https://openrouter.ai) API key (for local extraction and search)
-- Optional: a [Mem0](https://mem0.ai) API key (for cloud extraction)
 
 ## Installation
 
 ### From ClawHub
 
 ```bash
-openclaw plugins install clawhub:@mattstvartak/finch-smart-memory
+openclaw plugins install clawhub:@onenomad/finch-smart-memory
 ```
 
 ### From npm
 
 ```bash
-openclaw plugins install finch-smart-memory
+openclaw plugins install @onenomad/finch-smart-memory
 ```
 
-### Manual install
+### Manual install (from source)
 
-1. Clone and build:
-   ```bash
-   git clone https://github.com/mattstvartak/finch-smart-memory.git
-   cd finch-smart-memory
-   npm install
-   npm run build
-   ```
+```bash
+git clone https://github.com/mattstvartak/finch-smart-memory.git
+cd finch-smart-memory
+npm install
+npm run build
+openclaw plugins install ./
+```
 
-2. Install as a local plugin:
-   ```bash
-   openclaw plugins install ./path/to/finch-smart-memory
-   ```
+## Updating
 
-3. Set your API key:
-   ```bash
-   # Linux/macOS — add to ~/.bashrc, ~/.zshrc, or ~/.profile
-   export OPENROUTER_API_KEY="sk-or-your-key-here"
+### From ClawHub
 
-   # Windows — set as system/user environment variable
-   setx OPENROUTER_API_KEY "sk-or-your-key-here"
+```bash
+openclaw plugins update @onenomad/finch-smart-memory
+```
 
-   # Optional: Mem0 cloud extraction
-   export MEM0_API_KEY="m0-your-key-here"
-   ```
+Or update all plugins at once:
 
-4. Enable the plugin in your OpenClaw config:
-   ```json
-   {
-     "plugins": {
-       "entries": {
-         "finch-smart-memory": {
-           "enabled": true,
-           "config": {
-             "extractionProvider": "local"
-           }
-         }
-       }
-     }
-   }
-   ```
+```bash
+openclaw plugins update --all
+```
 
-## Registered Tools
+### Manual update (from source)
 
-Once installed, the plugin registers these tools that the agent can call:
+```bash
+cd finch-smart-memory
+git pull
+npm install
+npm run build
+```
 
-| Tool | Description |
-|------|-------------|
-| `memory_search` | Hybrid ANN vector + keyword search with spreading activation |
-| `memory_format` | Search and format memories for system prompt injection |
-| `memory_ingest` | WAL: immediately persist a memory before responding |
-| `memory_extract` | Extract memories from a conversation with LLM classification |
-| `memory_maintain` | Run consolidation (decay, promote, link, merge) |
-| `memory_rules` | Show active procedural rules |
-| `memory_outcome` | Record recall outcome (helpful/corrected/irrelevant) |
-| `memory_session` | Manage session state (hot RAM) |
-| `memory_stats` | Show memory statistics |
-| `memory_mem0_sync` | Sync Mem0 cloud memories to local (optional, requires MEM0_API_KEY) |
+## Configuration
 
-## Plugin Configuration
+Enable the plugin in your `openclaw.json`:
 
-Configure in `openclaw.json` under `plugins.entries.finch-smart-memory.config`:
+```json
+{
+  "plugins": {
+    "entries": {
+      "finch-smart-memory": {
+        "enabled": true
+      }
+    }
+  }
+}
+```
+
+### Settings
+
+All settings are optional. Configure under `plugins.entries.finch-smart-memory.config`:
 
 ```json
 {
@@ -126,37 +108,41 @@ Configure in `openclaw.json` under `plugins.entries.finch-smart-memory.config`:
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| `extractionProvider` | `local` | `local`, `mem0`, or `both` |
-| `cheapModel` | `google/gemini-2.5-flash-lite-preview` | LLM for extraction/classification |
-| `embeddingModel` | `google/text-embedding-004` | Embedding model for vector search |
+| `extractionProvider` | `local` | `local` (your OpenClaw model), `mem0`, or `both` |
+| `cheapModel` | `google/gemini-2.5-flash-lite-preview` | Model for extraction/classification |
+| `embeddingModel` | `google/text-embedding-004` | Model for vector embeddings |
 | `mem0UserId` | `default` | Mem0 user scope |
 | `maxRecallChunks` | `10` | Max memories returned per search |
 | `maxRecallTokens` | `1500` | Token budget for recalled memories |
 | `autoExtract` | `true` | Auto-extract memories after conversations |
 | `autoMaintain` | `true` | Run consolidation at session start |
 
-### API Keys
+### Mem0 (optional)
 
-Set as environment variables (never stored on disk):
-
-| Variable | Required | Purpose |
-|----------|----------|---------|
-| `OPENROUTER_API_KEY` | Yes (for local extraction) | LLM + embedding calls via OpenRouter |
-| `MEM0_API_KEY` | Only for Mem0 features | Mem0 cloud extraction |
-
-## CLI (Standalone)
-
-The plugin also ships a standalone CLI for use outside of OpenClaw:
+If using Mem0 cloud extraction, set the API key as an environment variable:
 
 ```bash
-node dist/cli.js search "programming preferences"
-node dist/cli.js ingest "User prefers dark mode" --type preference
-node dist/cli.js maintain
-node dist/cli.js stats
-node dist/cli.js session show
+export MEM0_API_KEY="your-key-here"
 ```
 
-Run `node dist/cli.js` for the full command reference.
+Then set `extractionProvider` to `mem0` or `both`.
+
+## Registered Tools
+
+Once installed, the plugin registers these tools that the agent can call:
+
+| Tool | Description |
+|------|-------------|
+| `memory_search` | Hybrid ANN vector + keyword search with spreading activation |
+| `memory_format` | Search and format memories for system prompt injection |
+| `memory_ingest` | WAL: immediately persist a memory before responding |
+| `memory_extract` | Extract memories from a conversation with LLM classification |
+| `memory_maintain` | Run consolidation (decay, promote, link, merge) |
+| `memory_rules` | Show active procedural rules |
+| `memory_outcome` | Record recall outcome (helpful/corrected/irrelevant) |
+| `memory_session` | Manage session state (hot RAM) |
+| `memory_stats` | Show memory statistics |
+| `memory_mem0_sync` | Sync Mem0 cloud memories to local (optional) |
 
 ## How It Works
 
@@ -207,7 +193,6 @@ When recalled memories are marked as helpful/corrected/irrelevant:
 All data lives in `~/.openclaw/smart-memory/`:
 ```
 ~/.openclaw/smart-memory/
-├── config.json          # Non-secret settings (CLI only)
 ├── SESSION-STATE.md     # Hot RAM scratchpad
 └── lance/               # LanceDB tables
     ├── chunks.lance/    # Memory chunks with embeddings
@@ -219,33 +204,23 @@ All data lives in `~/.openclaw/smart-memory/`:
 
 ### Network calls
 This plugin makes outbound requests to exactly two services:
-- **OpenRouter** (`https://openrouter.ai/api/v1/`) — LLM completions and embeddings
+- **Your configured model provider** (via OpenClaw runtime) — LLM completions and embeddings
 - **Mem0** (via `mem0ai` npm package) — only when `extractionProvider` is `mem0` or `both`
 
 No other endpoints are contacted. No telemetry or analytics.
 
 ### API keys
-- `OPENROUTER_API_KEY` — **required** for local extraction and search
-- `MEM0_API_KEY` — **optional**, only needed if using Mem0 cloud extraction
-- Keys are read from environment variables only; never written to disk by the plugin
+- LLM calls use your existing OpenClaw model provider — no extra API key needed
+- `MEM0_API_KEY` — optional, only needed if using Mem0 cloud extraction, set as environment variable
 
 ### Prompt injection
-When `autoExtract` and `autoMaintain` are enabled (the defaults), the plugin automatically:
-1. Runs memory consolidation at session start
-2. Injects recalled memories into the system prompt based on the user's message
-
-To disable automatic behavior and control manually:
+When enabled (default), the plugin automatically injects recalled memories into the system prompt. To disable:
 ```json
-{
-  "config": {
-    "autoExtract": false,
-    "autoMaintain": false
-  }
-}
+{ "config": { "autoExtract": false, "autoMaintain": false } }
 ```
 
 ### Local storage
-Memories, embeddings, and procedural rules are stored locally in `~/.openclaw/smart-memory/lance/`. Override with `SMART_MEMORY_DIR` to place data elsewhere. No memory content is sent anywhere except to the configured LLM (OpenRouter) and optionally Mem0.
+Memories and rules are stored locally in `~/.openclaw/smart-memory/lance/`. No memory content is sent anywhere except to your configured model provider and optionally Mem0.
 
 ## License
 
