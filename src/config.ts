@@ -18,8 +18,10 @@ export function loadConfig(overrides?: Partial<SmartMemoryConfig>): SmartMemoryC
     ...overrides,
   };
 
-  // Mem0 API key from environment (only needed if using Mem0 extraction)
-  config.mem0ApiKey = process.env.MEM0_API_KEY ?? '';
+  // Mem0 API key: plugin config takes priority, env var as fallback
+  if (!config.mem0ApiKey) {
+    config.mem0ApiKey = process.env.MEM0_API_KEY ?? '';
+  }
 
   return config;
 }

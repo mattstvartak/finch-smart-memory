@@ -42,6 +42,11 @@
         "default": "local",
         "description": "Extraction provider: local (your OpenClaw model), mem0 (Mem0 cloud), or both."
       },
+      "mem0ApiKey": {
+        "type": "string",
+        "default": "",
+        "description": "Mem0 API key for cloud extraction. Falls back to MEM0_API_KEY env var."
+      },
       "mem0UserId": {
         "type": "string",
         "default": "default",
@@ -77,6 +82,11 @@
     "extractionProvider": {
       "label": "Extraction Provider",
       "help": "Which service extracts memories from conversations."
+    },
+    "mem0ApiKey": {
+      "label": "Mem0 API Key",
+      "help": "API key for Mem0 cloud extraction. Leave empty to use MEM0_API_KEY env var instead.",
+      "sensitive": true
     },
     "mem0UserId": {
       "label": "Mem0 User ID",

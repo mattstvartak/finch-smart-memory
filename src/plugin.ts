@@ -62,6 +62,7 @@ const plugin = {
     const pluginConfig = api.pluginConfig ?? {};
     const config = loadConfig({
       extractionProvider: pluginConfig.extractionProvider,
+      mem0ApiKey: pluginConfig.mem0ApiKey || undefined,
       mem0UserId: pluginConfig.mem0UserId,
       maxRecallChunks: pluginConfig.maxRecallChunks,
       maxRecallTokens: pluginConfig.maxRecallTokens,
