@@ -1,0 +1,85 @@
+{
+  "id": "finch-smart-memory",
+  "name": "Smart Memory",
+  "description": "Intelligent memory manager with LLM-powered extraction, hybrid ANN vector search, tier lifecycle, spreading activation, procedural rules, WAL capture, Mem0 cloud integration, and session-state hot RAM.",
+  "kind": "memory",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "extractionProvider": {
+        "type": "string",
+        "enum": ["local", "mem0", "both"],
+        "default": "local",
+        "description": "Extraction provider: local (OpenRouter LLM), mem0 (Mem0 cloud), or both."
+      },
+      "cheapModel": {
+        "type": "string",
+        "default": "google/gemini-2.5-flash-lite-preview",
+        "description": "LLM model for extraction and classification."
+      },
+      "embeddingModel": {
+        "type": "string",
+        "default": "google/text-embedding-004",
+        "description": "Embedding model for vector search."
+      },
+      "mem0UserId": {
+        "type": "string",
+        "default": "default",
+        "description": "Mem0 user scope identifier."
+      },
+      "maxRecallChunks": {
+        "type": "number",
+        "default": 10,
+        "minimum": 1,
+        "maximum": 50,
+        "description": "Max memories returned per search."
+      },
+      "maxRecallTokens": {
+        "type": "number",
+        "default": 1500,
+        "minimum": 100,
+        "maximum": 10000,
+        "description": "Token budget for recalled memories."
+      },
+      "autoExtract": {
+        "type": "boolean",
+        "default": true,
+        "description": "Automatically extract memories after conversations."
+      },
+      "autoMaintain": {
+        "type": "boolean",
+        "default": true,
+        "description": "Run consolidation at session start."
+      }
+    }
+  },
+  "uiHints": {
+    "extractionProvider": {
+      "label": "Extraction Provider",
+      "help": "Which service extracts memories from conversations."
+    },
+    "cheapModel": {
+      "label": "Extraction Model",
+      "help": "Cheap/fast model for memory extraction and classification.",
+      "advanced": true
+    },
+    "embeddingModel": {
+      "label": "Embedding Model",
+      "help": "Model used for vector embeddings in search.",
+      "advanced": true
+    },
+    "mem0UserId": {
+      "label": "Mem0 User ID",
+      "help": "User identifier for Mem0 cloud scoping."
+    },
+    "maxRecallChunks": {
+      "label": "Max Recall Results",
+      "help": "Maximum number of memories returned per search."
+    },
+    "maxRecallTokens": {
+      "label": "Recall Token Budget",
+      "help": "Maximum tokens used by recalled memories in the prompt."
+    }
+  }
+}

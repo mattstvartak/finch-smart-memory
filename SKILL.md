@@ -1,7 +1,7 @@
 ---
 name: smart-memory
 description: Intelligent memory manager with LLM-powered extraction, hybrid ANN vector+keyword search, tier lifecycle, spreading activation, procedural rules, WAL capture, and session-state hot RAM. Use when the user asks about memory, preferences, or past conversations.
-homepage: https://github.com/onenomadllc/openclaw-smart-memory
+homepage: https://github.com/mattstvartak/finch-smart-memory
 metadata: {"openclaw":{"emoji":"🧠","requires":{"bins":["node"],"env":["OPENROUTER_API_KEY"]},"primaryEnv":"OPENROUTER_API_KEY"},"author":"OneNomad LLC","version":"1.0.0","categories":["memory","intelligence","personalization"]}
 ---
 
