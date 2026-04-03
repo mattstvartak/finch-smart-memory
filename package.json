@@ -1,0 +1,28 @@
+{
+  "name": "openclaw-smart-memory",
+  "version": "1.0.0",
+  "description": "Smart memory manager skill for OpenClaw — LLM-powered extraction, hybrid search, tier management, and procedural rules",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "smart-memory": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "extract": "node dist/cli.js extract",
+    "search": "node dist/cli.js search",
+    "maintain": "node dist/cli.js maintain",
+    "format": "node dist/cli.js format",
+    "rules": "node dist/cli.js rules",
+    "install-skill": "node scripts/install-skill.js"
+  },
+  "dependencies": {
+    "@lancedb/lancedb": "^0.27.2",
+    "mem0ai": "^2.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0"
+  }
+}
