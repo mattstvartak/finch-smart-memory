@@ -53,7 +53,7 @@ function jsonResult(data: any) {
 // We use a plain object export since we can't import the real SDK at dev time.
 // OpenClaw reads the openclaw metadata from package.json and loads this module.
 const plugin = {
-  id: 'finch-smart-memory',
+  id: 'finch-memory',
   name: 'Smart Memory',
   description: 'Intelligent memory manager with LLM-powered extraction, hybrid ANN vector search, tier lifecycle, spreading activation, procedural rules, WAL, Mem0, and session-state hot RAM.',
   kind: 'memory' as const,
