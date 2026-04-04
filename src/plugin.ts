@@ -115,7 +115,7 @@ const plugin = {
           })),
         });
       },
-    });
+    }, { name: 'memory_search' });
 
     // ── memory_format ────────────────────────────────────────────
     api.registerTool({
@@ -133,7 +133,7 @@ const plugin = {
         const rules = await formatRulesForPrompt(storage);
         return textResult(text + rules || 'No relevant memories found.');
       },
-    });
+    }, { name: 'memory_format' });
 
     // ── memory_ingest ────────────────────────────────────────────
     api.registerTool({
@@ -159,7 +159,7 @@ const plugin = {
           memory: chunks[0] ? { id: chunks[0].id, content: chunks[0].content, type: chunks[0].type, layer: chunks[0].cognitiveLayer } : null,
         });
       },
-    });
+    }, { name: 'memory_ingest' });
 
     // ── memory_extract ───────────────────────────────────────────
     api.registerTool({
@@ -188,7 +188,7 @@ const plugin = {
 
         return jsonResult({ extracted: allChunks.length, memories: allChunks });
       },
-    });
+    }, { name: 'memory_extract' });
 
     // ── memory_maintain ──────────────────────────────────────────
     api.registerTool({
@@ -201,7 +201,7 @@ const plugin = {
         const stats = await consolidate(storage);
         return jsonResult({ action: 'consolidation', ...stats });
       },
-    });
+    }, { name: 'memory_maintain' });
 
     // ── memory_rules ─────────────────────────────────────────────
     api.registerTool({
@@ -214,7 +214,7 @@ const plugin = {
         const text = await formatRulesForPrompt(storage);
         return textResult(text || 'No active procedural rules.');
       },
-    });
+    }, { name: 'memory_rules' });
 
     // ── memory_outcome ───────────────────────────────────────────
     api.registerTool({
@@ -231,7 +231,7 @@ const plugin = {
         await recordRecallOutcome(config, storage, ids, params.outcome as any, `plugin-${Date.now()}`);
         return textResult(`Recorded ${params.outcome} outcome for ${ids.length} chunk(s).`);
       },
-    });
+    }, { name: 'memory_outcome' });
 
     // ── memory_session ───────────────────────────────────────────
     api.registerTool({
@@ -265,7 +265,7 @@ const plugin = {
             return textResult(`Unknown action: ${params.action}. Use: show, task, context, decision, action, clear.`);
         }
       },
-    });
+    }, { name: 'memory_session' });
 
     // ── memory_stats ─────────────────────────────────────────────
     api.registerTool({
@@ -298,7 +298,7 @@ const plugin = {
           sessionTask: state.currentTask || null,
         });
       },
-    });
+    }, { name: 'memory_stats' });
 
     // ── memory_mem0_sync ─────────────────────────────────────────
     api.registerTool({
