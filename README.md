@@ -1,8 +1,7 @@
-# Finch Smart Memory — OpenClaw Plugin
+# OpenClaw Smart Memory Plugin
 
 An intelligent memory plugin for [OpenClaw](https://openclaw.ai) that replaces manual memory curation with automatic extraction, hybrid search, and cognitive-science-inspired memory lifecycle management. Uses your existing OpenClaw model provider — no extra API keys required.
 
-Built by **OneNomad LLC**.
 
 ## Features
 
@@ -22,20 +21,20 @@ Built by **OneNomad LLC**.
 ### From ClawHub
 
 ```bash
-openclaw plugins install clawhub:@onenomad/finch-smart-memory
+openclaw plugins install clawhub:openclaw-smart-memory-plugin
 ```
 
 ### From npm
 
 ```bash
-openclaw plugins install @onenomad/finch-smart-memory
+openclaw plugins install openclaw-smart-memory-plugin
 ```
 
 ### Manual install (from source)
 
 ```bash
-git clone https://github.com/mattstvartak/finch-smart-memory.git
-cd finch-smart-memory
+git clone https://github.com/mattstvartak/openclaw-smart-memory-plugin.git
+cd openclaw-smart-memory-plugin
 npm install
 npm run build
 openclaw plugins install ./
@@ -46,7 +45,7 @@ openclaw plugins install ./
 ### From ClawHub
 
 ```bash
-openclaw plugins update @onenomad/finch-smart-memory
+openclaw plugins update openclaw-smart-memory-plugin
 ```
 
 Or update all plugins at once:
@@ -58,7 +57,7 @@ openclaw plugins update --all
 ### Manual update (from source)
 
 ```bash
-cd finch-smart-memory
+cd openclaw-smart-memory-plugin
 git pull
 npm install
 npm run build
@@ -72,7 +71,7 @@ Enable the plugin in your `openclaw.json`:
 {
   "plugins": {
     "entries": {
-      "finch-smart-memory": {
+      "openclaw-smart-memory-plugin": {
         "enabled": true
       }
     }
@@ -82,13 +81,13 @@ Enable the plugin in your `openclaw.json`:
 
 ### Settings
 
-All settings are optional. Configure under `plugins.entries.finch-smart-memory.config`:
+All settings are optional. Configure under `plugins.entries.openclaw-smart-memory-plugin.config`:
 
 ```json
 {
   "plugins": {
     "entries": {
-      "finch-smart-memory": {
+      "openclaw-smart-memory-plugin": {
         "enabled": true,
         "config": {
           "extractionProvider": "local",

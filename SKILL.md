@@ -1,8 +1,8 @@
 ---
 name: smart-memory
 description: Intelligent memory manager with LLM-powered extraction, hybrid ANN vector+keyword search, tier lifecycle, spreading activation, procedural rules, WAL capture, and session-state hot RAM. Use when the user asks about memory, preferences, or past conversations.
-homepage: https://github.com/mattstvartak/finch-smart-memory
-metadata: {"openclaw":{"emoji":"🧠","requires":{"bins":["node"]}},"author":"OneNomad LLC","version":"1.0.2","categories":["memory","intelligence","personalization"]}
+homepage: https://github.com/mattstvartak/openclaw-smart-memory-plugin
+metadata: {"openclaw":{"emoji":"🧠","requires":{"bins":["node"]}},"version":"1.0.2","categories":["memory","intelligence","personalization"]}
 ---
 
 # Smart Memory Manager
@@ -155,7 +155,7 @@ The SESSION-STATE.md file is plain markdown — inject it into your system promp
 
 ## Configuration
 
-Configure in `openclaw.json` under `plugins.entries.finch-smart-memory.config`. No API keys required — the plugin uses your existing OpenClaw model provider.
+Configure in `openclaw.json` under `plugins.entries.openclaw-smart-memory-plugin.config`. No API keys required — the plugin uses your existing OpenClaw model provider.
 
 Optional: set `MEM0_API_KEY` environment variable if using Mem0 cloud extraction.
 
